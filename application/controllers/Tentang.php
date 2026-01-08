@@ -16,7 +16,8 @@ class Tentang extends CI_Controller {
         // Jika kamu pakai header footer user
         $this->load->view('partials/header', $data);
         $this->load->view('user/tentang_kami', $data);
-        //$this->load->view('templates/footer'); //
+        $this->load->view('partials/footer', $data);
+
     }
     
 }

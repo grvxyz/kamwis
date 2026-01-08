@@ -49,7 +49,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'auth/login';
+$route['default_controller'] = 'welcome';
+$route['index']        = 'welcome/artikel';
+$route['tentang-kami']   = 'welcome/tentang_kami';
+$route['paket-wisata']   = 'welcome/paket_wisata';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 $route['register'] = 'auth/register';
@@ -60,4 +63,5 @@ $route['logout'] = 'auth/logout';
 $route['user/tentang_kami'] = 'tentang/index';
 $route['artikel/(:any)'] = 'artikel/detail/$1';
 $route['artikel']        = 'artikel/index';
+$route['admin/rating/ajax'] = 'admin/rating/ajax_list';
 

@@ -29,10 +29,12 @@ class Dashboard extends CI_Controller {
             'pendapatan'      => $this->AdminDashboard_model->total_pendapatan(),
             'reservasi'       => $this->AdminDashboard_model->latest_reservasi(3)
         ];
+        
 
         $this->load->view('admin/layout/header', $data);
         $this->load->view('admin/layout/sidebar');
         $this->load->view('admin/dashboard', $data);
         $this->load->view('admin/layout/footer');
     }
+
 }

@@ -19,7 +19,9 @@ class Dashboard extends CI_Controller {
         'event_slider'   => $this->Dashboard_model->get_event_slider(),
         'paket_unggulan' => $this->Dashboard_model->get_paket_unggulan(),
         'artikel'        => $this->Dashboard_model->get_artikel_terbaru(),
+        'paket_wisata'   => $this->Dashboard_model->get_all_paket(),
         'galeri'         => $this->Dashboard_model->get_galeri() // 🔥 FIX
+
     ];
 
     $this->load->view('user/dashboard/index', $data);

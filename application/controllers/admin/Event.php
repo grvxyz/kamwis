@@ -36,7 +36,8 @@ class Event extends CI_Controller {
      * HALAMAN UTAMA
      */
     public function index(){
-        $data['event'] = $this->Event_model->get_all();
+        $data['event'] = $this->Event_model->get_all() ?? [];
+
         $this->load->view('admin/layout/header', $data);
         $this->load->view('admin/layout/sidebar');
         $this->load->view('admin/event/index', $data);

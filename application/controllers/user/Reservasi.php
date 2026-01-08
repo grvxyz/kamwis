@@ -129,4 +129,24 @@ class Reservasi extends CI_Controller {
 
         $this->load->view('user/reservasi/riwayat', $data);
     }
+    public function ajax_filter()
+{
+    if (!$this->session->userdata('id_user')) {
+        show_error('Unauthorized', 401);
+    }
+
+    $status  = $this->input->post('status');
+    $id_user = $this->session->userdata('id_user');
+
+    if ($status == 'all') {
+        $data['reservasi'] = $this->Reservasi_model->get_by_user($id_user);
+    } else {
+        $data['reservasi'] = $this->Reservasi_model
+            ->get_by_user_and_status($id_user, $status);
+    }
+
+    // PARTIAL VIEW (KHUSUS LIST)
+    $this->load->view('user/reservasi/_list', $data);
+}
+
 }

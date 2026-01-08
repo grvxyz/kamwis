@@ -26,7 +26,9 @@
     <?php if(!empty($artikel)): ?>
         <div class="grid md:grid-cols-2 gap-6">
 
-            <?php foreach($artikel as $a): ?>
+            <?php foreach ($artikel as $a): ?>
+                        <?php if ($a->status !== 'publish')
+                            continue; ?>
             <article class="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden">
 
                 <!-- FOTO -->

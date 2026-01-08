@@ -30,9 +30,6 @@
                     <?= $paket->nama_paket ?>
                 </h3>
 
-                <p class="text-xs sm:text-sm text-gray-500 mb-2">
-                    <?= $paket->kategori ?>
-                </p>
 
                 <p class="text-xs sm:text-sm">Harga / orang</p>
                 <p class="font-bold text-[#592300]">

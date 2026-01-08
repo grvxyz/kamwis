@@ -10,7 +10,7 @@ class Paket_model extends CI_Model {
     ===================== */
     public function get_all_paket(){
         return $this->db
-            ->where('status', 'aktif')
+            
             ->order_by('created_at', 'DESC')
             ->get($this->table)
             ->result();

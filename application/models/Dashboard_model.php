@@ -29,6 +29,15 @@ class Dashboard_model extends CI_Model {
             ->get()
             ->result();
     }
+    public function get_all_paket()
+{
+    return $this->db
+        ->where('status', 'aktif')
+        ->order_by('id_paket', 'DESC')
+        ->get('paket_wisata')
+        ->result();
+}
+
 
     /* ================= ARTIKEL TERBARU ================= */
     public function get_artikel_terbaru()

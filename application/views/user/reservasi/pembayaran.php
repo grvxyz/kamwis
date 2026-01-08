@@ -18,11 +18,12 @@
     </script>
 </head>
 
-<body class="bg-gradient-to-br from-blue-50 to-green-50 min-h-screen">
+<body class="bg-gradient-to-br from-blue-50 to-green-50 min-h-screen flex flex-col">
 
 <?php $this->load->view('partials/header'); ?>
 
 <!-- ================= CARD ================= -->
+<main class="flex-1">
 <div id="payment-card"
      class="max-w-xl mx-auto mt-14 bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
 
@@ -82,16 +83,24 @@
         Bayar Sekarang
     </button>
 
+    <!-- STATUS MESSAGE -->
+    <p id="payment-status"
+       class="hidden mt-4 text-center text-sm font-semibold text-green-600">
+    </p>
+
     <a href="<?= site_url('user/reservasi/riwayat') ?>"
        class="block text-center mt-4 text-sm text-gray-500 hover:text-gray-700">
         Bayar nanti
     </a>
 
 </div>
+</main>
+
+<?php $this->load->view('partials/footer'); ?>
 
 <!-- ================= JS ================= -->
 <script>
-// ANIMASI MASUK
+// ANIMASI MASUK CARD
 anime({
     targets: '#payment-card',
     opacity: [0, 1],
@@ -100,8 +109,10 @@ anime({
     easing: 'easeOutExpo'
 });
 
-// BUTTON CLICK EFFECT
-document.getElementById('pay-button').addEventListener('mouseenter', () => {
+// ANIMASI HOVER BUTTON
+const payBtn = document.getElementById('pay-button');
+
+payBtn.addEventListener('mouseenter', () => {
     anime({
         targets: '#pay-button',
         scale: 1.03,
@@ -110,7 +121,7 @@ document.getElementById('pay-button').addEventListener('mouseenter', () => {
     });
 });
 
-document.getElementById('pay-button').addEventListener('mouseleave', () => {
+payBtn.addEventListener('mouseleave', () => {
     anime({
         targets: '#pay-button',
         scale: 1,
@@ -119,13 +130,35 @@ document.getElementById('pay-button').addEventListener('mouseleave', () => {
     });
 });
 
-// MIDTRANS
-document.getElementById('pay-button').onclick = function () {
+// MIDTRANS SNAP
+payBtn.onclick = function () {
 
     snap.pay("<?= $_GET['token'] ?>", {
 
         onSuccess: function(result){
-            window.location.href = "<?= site_url('user/reservasi/riwayat') ?>";
+
+            // STATUS TEKS
+            const statusEl = document.getElementById('payment-status');
+            statusEl.innerText = "✅ Pembayaran berhasil! Mengalihkan ke riwayat...";
+            statusEl.classList.remove('hidden');
+
+            // DISABLE BUTTON
+            payBtn.disabled = true;
+            payBtn.innerText = "Pembayaran Berhasil";
+            payBtn.classList.add('opacity-60', 'cursor-not-allowed');
+
+            // ANIMASI SUKSES
+            anime({
+                targets: '#payment-card',
+                scale: [1, 1.03, 1],
+                duration: 600,
+                easing: 'easeInOutQuad'
+            });
+
+            // REDIRECT
+            setTimeout(() => {
+                window.location.href = "<?= site_url('user/reservasi/riwayat') ?>";
+            }, 2000);
         },
 
         onPending: function(result){
@@ -133,12 +166,12 @@ document.getElementById('pay-button').onclick = function () {
         },
 
         onError: function(result){
-            alert("Pembayaran gagal");
+            alert("❌ Pembayaran gagal");
             console.log(result);
         },
 
         onClose: function(){
-            alert("Pembayaran belum diselesaikan");
+            alert("⚠️ Pembayaran belum diselesaikan");
         }
     });
 };

@@ -23,88 +23,49 @@
         </p>
     </div>
 
-    <!-- ================= FLASH MESSAGE ================= -->
-    <?php if ($this->session->flashdata('success')) : ?>
-        <div class="mb-4 rounded-lg bg-green-100 px-4 py-3 text-sm text-green-700">
-            <?= $this->session->flashdata('success'); ?>
-        </div>
-    <?php endif; ?>
+    <!-- ================= FILTER ================= -->
+    <div class="mb-4 flex flex-wrap gap-3 items-center">
+        <label class="text-sm text-gray-600 font-medium">
+            Filter Status:
+        </label>
 
-    <!-- ================= JIKA DATA KOSONG ================= -->
-    <?php if (empty($reservasi)) : ?>
-        <div class="rounded-xl bg-white p-6 text-center shadow">
-            <p class="text-gray-500">
-                Belum ada reservasi.
-            </p>
-
-            <a href="<?= site_url('user/paket'); ?>"
-               class="mt-4 inline-block rounded-lg bg-gradient-to-r from-blue-600 to-green-500
-                      px-6 py-2 text-sm font-semibold text-white">
-                Pesan Paket Wisata
-            </a>
-        </div>
-
-    <?php else : ?>
-
-    <!-- ================= TABEL RIWAYAT ================= -->
-    <div class="overflow-x-auto rounded-xl bg-white shadow">
-        <table class="w-full text-sm">
-            <thead class="bg-gradient-to-r from-blue-600 to-green-500 text-white">
-                <tr>
-                    <th class="px-4 py-3 text-left">Paket</th>
-                    <th class="px-4 py-3 text-center">Tanggal</th>
-                    <th class="px-4 py-3 text-center">Jam</th>
-                    <th class="px-4 py-3 text-center">Peserta</th>
-                    <th class="px-4 py-3 text-center">Total</th>
-                    <th class="px-4 py-3 text-center">Status</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <?php foreach ($reservasi as $r) : ?>
-                <tr class="border-b hover:bg-gray-50 transition">
-                    <td class="px-4 py-3 font-medium text-gray-800">
-                        <?= $r->nama_paket ?>
-                    </td>
-
-                    <td class="px-4 py-3 text-center">
-                        <?= date('d M Y', strtotime($r->tanggal_kunjungan)) ?>
-                    </td>
-
-                    <td class="px-4 py-3 text-center">
-                        <?= substr($r->jam_kunjungan, 0, 5) ?>
-                    </td>
-
-                    <td class="px-4 py-3 text-center">
-                        <?= $r->jumlah_peserta ?> org
-                    </td>
-
-                    <td class="px-4 py-3 text-center font-semibold text-green-600">
-                        Rp <?= number_format($r->total_harga, 0, ',', '.') ?>
-                    </td>
-
-                    <td class="px-4 py-3 text-center">
-                        <?php
-                            $badge = [
-                                'Pending'   => 'bg-yellow-100 text-yellow-700',
-                                'Disetujui' => 'bg-green-100 text-green-700',
-                                'Ditolak'   => 'bg-red-100 text-red-700',
-                            ];
-                        ?>
-                        <span class="rounded-full px-3 py-1 text-xs font-semibold
-                                     <?= $badge[$r->status] ?? 'bg-gray-100 text-gray-600' ?>">
-                            <?= $r->status ?>
-                        </span>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+        <select id="filterStatus"
+            class="rounded-lg border px-4 py-2 text-sm focus:ring focus:ring-blue-200">
+            <option value="all">Semua</option>
+            <option value="Pending">Pending</option>
+            <option value="Dikonfirmasi">Dikonfirmasi</option>
+            <option value="Dibatalkan">Dibatalkan</option>
+            <option value="Selesai">Selesai</option>
+        </select>
     </div>
 
-    <?php endif; ?>
+    <!-- ================= LIST (AJAX TARGET) ================= -->
+    <div id="reservasiList">
+        <?php $this->load->view('user/reservasi/_list', ['reservasi' => $reservasi]); ?>
+    </div>
 
 </div>
+
+<script>
+document.getElementById('filterStatus').addEventListener('change', function () {
+
+    fetch("<?= site_url('user/reservasi/ajax_filter') ?>", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "status=" + this.value
+    })
+    .then(res => res.text())
+    .then(html => {
+        document.getElementById('reservasiList').innerHTML = html;
+    })
+    .catch(() => {
+        alert('Gagal memuat data');
+    });
+
+});
+</script>
 
 </body>
 </html>

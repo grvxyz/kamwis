@@ -6,7 +6,20 @@
         <h1 class="text-2xl font-bold text-gray-800">Kelola Paket Wisata</h1>
         <p class="text-sm text-gray-500">Manajemen paket & harga wisata</p>
     </div>
+</div>
+<div class="flex flex-wrap items-center gap-3 mb-4">
+    <select id="filterStatus"
+        class="border rounded-lg px-3 py-2 text-sm"
+        onchange="filterPaket()">
+        <option value="all">Semua Status</option>
+        <option value="aktif">Aktif</option>
+        <option value="nonaktif">Nonaktif</option>
+    </select>
 
+    <input type="text" id="searchNama"
+        placeholder="Cari nama paket..."
+        class="border rounded-lg px-3 py-2 text-sm w-64"
+        onkeyup="filterPaket()">
     <button onclick="openModal()"
         class="inline-flex items-center gap-2 px-4 py-2
                bg-blue-600 hover:bg-blue-700
@@ -38,7 +51,9 @@ Data paket belum tersedia
 <?php endif; ?>
 
 <?php foreach($paket as $p): ?>
-<tr class="hover:bg-gray-50 transition">
+<tr class="paket-row hover:bg-gray-50 transition"
+    data-status="<?= $p->status ?>"
+    data-nama="<?= strtolower($p->nama_paket) ?>">
 <td class="px-5 py-4">
     <img src="<?= base_url('uploads/paket/'.$p->foto) ?>"
          class="w-24 h-16 object-cover rounded-lg border">
@@ -76,6 +91,7 @@ Data paket belum tersedia
 </td>
 </tr>
 <?php endforeach; ?>
+
 </tbody>
 </table>
 </div>
@@ -153,6 +169,22 @@ Simpan
 
 <!-- ================= JS ================= -->
 <script>
+    function filterPaket(){
+    const statusFilter = document.getElementById('filterStatus').value;
+    const searchVal = document.getElementById('searchNama').value.toLowerCase();
+    const rows = document.querySelectorAll('.paket-row');
+
+    rows.forEach(row=>{
+        const rowStatus = row.getAttribute('data-status');
+        const rowNama = row.getAttribute('data-nama');
+        let show = true;
+
+        if(statusFilter !== 'all' && statusFilter !== rowStatus) show=false;
+        if(searchVal && !rowNama.includes(searchVal)) show=false;
+
+        row.style.display = show ? '' : 'none';
+    });
+}
 function openModal(){
     modal.classList.remove('hidden');
 }
@@ -205,5 +237,6 @@ function hapusPaket(id){
 }
 .animate-scale{animation:scale .2s ease}
 </style>
+
 
 </main>

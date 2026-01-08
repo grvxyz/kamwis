@@ -8,16 +8,27 @@ class Review_model extends CI_Model {
     /* =====================
        AMBIL REVIEW PER PAKET
     ===================== */
-    public function get_review_by_paket($id_paket){
-        return $this->db
-            ->select('paket_review.*, users.nama')
-            ->from($this->table)
-            ->join('users', 'users.id_user = paket_review.id_user')
-            ->where('paket_review.id_paket', $id_paket)
-            ->order_by('paket_review.created_at', 'DESC')
-            ->get()
-            ->result();
-    }
+  public function get_review_by_paket($id_paket){
+    return $this->db
+        ->select('paket_review.*, users.nama, users.foto')
+        ->from($this->table)
+        ->join('users', 'users.id_user = paket_review.id_user')
+        ->where('paket_review.id_paket', $id_paket)
+        ->order_by('paket_review.created_at', 'DESC')
+        ->get()
+        ->result();
+}
+
+    public function cek_pernah_pesan($id_paket, $id_user)
+{
+    return $this->db
+        ->where('id_paket', $id_paket)
+        ->where('id_user', $id_user)
+        ->where('status', 'selesai') // atau 'dibayar'
+        ->get('reservasi')           // sesuaikan nama tabel
+        ->row();
+}
+
 
     /* =====================
        CEK APAKAH USER SUDAH REVIEW

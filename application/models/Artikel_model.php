@@ -7,6 +7,7 @@ class Artikel_model extends CI_Model {
 
     /* ===================== GET ===================== */
 
+    // Ambil semua artikel tanpa filter
     public function get_all() {
         return $this->db
             ->order_by('created_at', 'DESC')
@@ -14,6 +15,7 @@ class Artikel_model extends CI_Model {
             ->result();
     }
 
+    // Ambil artikel yang statusnya publish
     public function get_publish() {
         return $this->db
             ->where('status', 'publish')
@@ -22,6 +24,7 @@ class Artikel_model extends CI_Model {
             ->result();
     }
 
+    // Ambil artikel berdasarkan ID
     public function get_by_id($id) {
         return $this->db
             ->where('id_artikel', $id)
@@ -29,6 +32,7 @@ class Artikel_model extends CI_Model {
             ->row();
     }
 
+    // Ambil artikel berdasarkan slug (hanya publish)
     public function get_by_slug($slug) {
         return $this->db
             ->where('slug', $slug)
@@ -37,14 +41,30 @@ class Artikel_model extends CI_Model {
             ->row();
     }
 
-    /* ===================== INSERT ===================== */
+    // ===================== FILTERED GET =====================
+    // Ambil artikel dengan filter search & status
+    public function get_filtered($q = null, $status = null) {
+        $this->db->from($this->table);
 
+        if ($q) {
+            $this->db->like('judul', $q);
+        }
+
+        if ($status && in_array($status, ['publish', 'draft'])) {
+            $this->db->where('status', $status);
+        }
+
+        $this->db->order_by('created_at', 'DESC');
+
+        return $this->db->get()->result();
+    }
+
+    /* ===================== INSERT ===================== */
     public function insert($data) {
         return $this->db->insert($this->table, $data);
     }
 
     /* ===================== UPDATE ===================== */
-
     public function update($id, $data) {
         return $this->db
             ->where('id_artikel', $id)
@@ -52,7 +72,6 @@ class Artikel_model extends CI_Model {
     }
 
     /* ===================== DELETE ===================== */
-
     public function delete($id) {
         $artikel = $this->get_by_id($id);
 
@@ -68,5 +87,4 @@ class Artikel_model extends CI_Model {
             ->where('id_artikel', $id)
             ->delete($this->table);
     }
-    
 }

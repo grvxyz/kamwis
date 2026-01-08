@@ -135,8 +135,9 @@
 
         <!-- ISI ARTIKEL -->
         <div class="prose prose-slate prose-lg max-w-none">
-            <?= $artikel->isi ?>
-        </div>
+    <?= nl2br(htmlspecialchars($artikel->isi)) ?>
+</div>
+
 
     </div>
 

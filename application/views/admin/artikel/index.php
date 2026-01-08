@@ -6,8 +6,22 @@
         <h1 class="text-2xl font-bold text-gray-800">Kelola Artikel</h1>
         <p class="text-sm text-gray-500">Manajemen konten & SEO artikel</p>
     </div>
+</div>
+<!-- ================= FILTER & SEARCH ================= -->
+<div class="flex flex-wrap items-center gap-3 mb-4">
+    <select id="filterStatus"
+        class="border rounded-lg px-3 py-2 text-sm"
+        onchange="filterArtikel()">
+        <option value="all">Semua Status</option>
+        <option value="publish">Publish</option>
+        <option value="draft">Draft</option>
+    </select>
 
-    <button onclick="openFormModal()"
+    <input type="text" id="searchJudul"
+        placeholder="Cari judul artikel..."
+        class="border rounded-lg px-3 py-2 text-sm w-64"
+        onkeyup="filterArtikel()">
+         <button onclick="openFormModal()"
         class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow text-sm font-semibold">
         + Tambah Artikel
     </button>
@@ -253,6 +267,28 @@ function hapusArtikel(id){
         }).then(() => location.reload());
     }
 }
+// ================= FILTER =================
+function filterArtikel(){
+    const filterStatus = document.getElementById('filterStatus').value.toLowerCase();
+    const searchJudul = document.getElementById('searchJudul').value.toLowerCase();
+
+    const rows = document.querySelectorAll('tbody tr');
+
+    rows.forEach(row => {
+        const judul = row.querySelector('td:nth-child(2) p').innerText.toLowerCase().trim();
+        const status = row.querySelector('td:nth-child(3) span').innerText.toLowerCase().trim();
+
+        const matchStatus = filterStatus === 'all' || status === filterStatus;
+        const matchJudul = judul.includes(searchJudul);
+
+        if(matchStatus && matchJudul){
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
 </script>
 
 </main>
